@@ -1,0 +1,18 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "build",
+            "command": "g++ main.cpp VertexBuffer.cpp ./../test/TestClearColor.cpp ./../dep/imgui/imgui_demo.cpp ./../dep/imgui/imgui_draw.cpp ./../dep/imgui/imgui.cpp ./../dep/imgui/imgui_impl_glfw_gl3.cpp IndexBuffer.cpp Texture.cpp ./../dep/stb_image/stb_image.cpp ShaderProgram.cpp renderer.cpp VertexArray.cpp VertexBufferLayout.cpp -o main.exec -lGL -lGLEW -lGLU -lglfw3 -lX11 -lXxf86vm -lXrandr -lpthread -lXi -ldl -lXinerama -lXcursor",
+            "args": [],
+            "options": {
+                "cwd": "${workspaceFolder}/src"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        }
+    ]
+}
