@@ -17,6 +17,7 @@
 #include "Texture.hpp"
 #include "./../dep/imgui/imgui.h"
 #include "./../dep/imgui/imgui_impl_glfw_gl3.h"
+#include "./../tests/TestClearColor.hpp"
 using namespace std::string_literals;
 #define cherno
 #ifdef cherno
@@ -88,6 +89,8 @@ int main(void)
 
         renderer renderer;
 
+        test::TestClearColor test;
+
         ImGui::CreateContext();
         ImGui_ImplGlfwGL3_Init(window, true);
         ImGui::StyleColorsDark();
@@ -100,8 +103,11 @@ int main(void)
 
             renderer.Clear();
 
-            ImGui_ImplGlfwGL3_NewFrame();
+            test.OnUpdate(0.0f);
+            test.OnRender();
 
+            ImGui_ImplGlfwGL3_NewFrame();
+            test.OnImGuiRender();
             ImGui::Render();
             ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
 

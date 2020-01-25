@@ -1,10 +1,10 @@
 #include "TestClearColor.hpp"
-#include "renderer.hpp"
+#include "./../src/renderer.hpp"
 #include "./../dep/imgui/imgui.h"
 
 namespace test
 {
-TestClearColor::TestClearColor(/* args */) : m_ClearColor({0.0f, 0.0f, 0.0f, 0.0f})
+TestClearColor::TestClearColor(/* args */) : m_ClearColor{0.0f, 0.0f, 0.0f, 0.0f}
 {
 }
 
@@ -24,7 +24,7 @@ void TestClearColor::OnRender()
 
 void TestClearColor::OnImGuiRender()
 {
-    ImGui::ColorEdit4("glClearColor Value: ", &m_ClearColor[0], 1);
+    ImGui::ColorEdit4("glClearColor Value: ", m_ClearColor, 1);
 }
 
 } // namespace test
