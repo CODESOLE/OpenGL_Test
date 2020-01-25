@@ -4,7 +4,7 @@
 
 namespace test
 {
-TestClearColor::TestClearColor(/* args */) : m_ClearColor{0.0f, 0.0f, 0.0f, 0.0f}
+TestClearColor::TestClearColor(/* args */) : m_ClearColor{0.0f, 0.0f, 0.0f, 1.0f}
 {
 }
 
@@ -24,7 +24,7 @@ void TestClearColor::OnRender()
 
 void TestClearColor::OnImGuiRender()
 {
-    ImGui::ColorEdit4("glClearColor Value: ", m_ClearColor, 1);
+    ImGui::ColorEdit4("glClearColor Value: ", m_ClearColor);
 }
 
 } // namespace test
