@@ -10,7 +10,7 @@ private:
     float m_ClearColor[4];
 
 public:
-    TestClearColor();
+    TestClearColor(/* arguments */);
     ~TestClearColor();
 
     void OnUpdate(float deltaTime) override;
