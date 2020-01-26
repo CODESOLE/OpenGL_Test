@@ -13,10 +13,10 @@ class ShaderProgram
 {
 private:
     unsigned int m_ShaderProgramId;
-    std::map<const char *, int> m_UniformVar;
+    mutable std::map<const char *, int> m_UniformVar;
 
     unsigned int CompileShader(unsigned int, const std::string &);
-    int getUniformLocation(const char *);
+    GLuint checkandGetUniformLocation(const char *) const;
 
 public:
     ShaderProgram(const std::string &, const std::string &);

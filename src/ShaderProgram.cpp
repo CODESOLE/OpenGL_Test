@@ -1,27 +1,34 @@
 #include "ShaderProgram.hpp"
 
-int ShaderProgram::getUniformLocation(const char *varName)
+GLuint ShaderProgram::checkandGetUniformLocation(const char *varname) const
 {
-    GLErrCall(int location = glGetUniformLocation(m_ShaderProgramId, varName));
-    if (location == -1)
-        std::cout << "Warning: Uniform " << varName << "doesn't exist!" << std::endl;
-    GLErrCall(m_UniformVar[varName] = location);
-    return location;
+    if (m_UniformVar.find(varname) != m_UniformVar.end())
+    {
+        return m_UniformVar[varname];
+    }
+    else
+    {
+        GLErrCall(int location = glGetUniformLocation(m_ShaderProgramId, varname));
+        if (location == -1)
+            std::cout << "Warning: Uniform " << varname << "doesn't exist!" << std::endl;
+        m_UniformVar[varname] = location;
+        return location;
+    }
 }
 
 void ShaderProgram::setUniformMat4f(const char *varName, const glm::mat4 &proj)
 {
-    GLErrCall(glUniformMatrix4fv(getUniformLocation(varName), 1, GL_FALSE, &proj[0][0]));
+    GLErrCall(glUniformMatrix4fv(checkandGetUniformLocation(varName), 1, GL_FALSE, &proj[0][0]));
 }
 
 void ShaderProgram::setUniformFloat4(const char *varname, glm::vec4 _value)
 {
-    GLErrCall(glUniform4f(getUniformLocation(varname), _value.r, _value.g, _value.b, _value.a));
+    GLErrCall(glUniform4f(checkandGetUniformLocation(varname), _value.r, _value.g, _value.b, _value.a));
 }
 
 void ShaderProgram::setUniformInt1(const char *varName, int val)
 {
-    GLErrCall(glUniform1i(getUniformLocation(varName), val));
+    GLErrCall(glUniform1i(checkandGetUniformLocation(varName), val));
 }
 
 ShaderProgram::ShaderProgram(const std::string &vertexShaderFilePath, const std::string &fragmentShaderFilePath)
