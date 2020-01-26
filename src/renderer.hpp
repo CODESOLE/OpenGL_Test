@@ -23,6 +23,7 @@ bool GLLogCall(const char *funcName, const char *file, int line);
 #include "ShaderProgram.hpp"
 
 class ShaderProgram;
+class VertexArray;
 
 void GLClearError();
 

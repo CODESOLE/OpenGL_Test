@@ -18,6 +18,7 @@
 #include "./../dep/imgui/imgui.h"
 #include "./../dep/imgui/imgui_impl_glfw_gl3.h"
 #include "./../tests/TestClearColor.hpp"
+#include "./../tests/TestTexture2D.hpp"
 using namespace std::string_literals;
 #define cherno
 #ifdef cherno
@@ -98,6 +99,7 @@ int main(void)
         ImGui::StyleColorsDark();
 
         test_menu->RegisterTest<test::TestClearColor>("Clear Color Test");
+        test_menu->RegisterTest<test::TestTexture2D>("Texture 2D Test");
 
         while (!glfwWindowShouldClose(window))
         {
