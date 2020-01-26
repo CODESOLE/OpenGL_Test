@@ -4,7 +4,7 @@
 
 namespace test
 {
-TestClearColor::TestClearColor(/* args */) : m_ClearColor{0.0f, 0.0f, 0.0f, 1.0f}
+TestClearColor::TestClearColor(/* args */) : m_ClearColor{0.0f, 0.0f, 0.0f, 0.0f}
 {
 }
 
