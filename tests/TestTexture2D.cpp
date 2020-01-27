@@ -15,10 +15,10 @@ TestTexture2D::TestTexture2D()
 {
 
     float verticesss[] = {
-        0.0f, 100.0f, 0.0f, 0.0f,
-        100.0f, 100.0f, 1.0f, 0.0f,
-        100.0f, 200.0f, 1.0f, 1.0f,
-        0.0f, 200.0f, 0.0f, 1.0f};
+        0.0f, 100.0f, 0.0f, 0.0f, 0.0f,
+        100.0f, 100.0f, 0.0f, 1.0f, 0.0f,
+        100.0f, 200.0f, 0.0f, 1.0f, 1.0f,
+        0.0f, 200.0f, 0.0f, 0.0f, 1.0f};
 
     unsigned int indecies[] = {0, 1, 2, 2, 3, 0};
 
@@ -26,7 +26,7 @@ TestTexture2D::TestTexture2D()
     m_vb = std::make_unique<VertexBuffer>(verticesss, sizeof(verticesss));
 
     VertexBufferLayout layout;
-    layout.Push<float>(2);
+    layout.Push<float>(3);
     layout.Push<float>(2);
     m_va->AddBuffer(*m_vb, layout);
     m_ib = std::make_unique<IndexBuffer>(indecies, 6);
@@ -55,7 +55,7 @@ void TestTexture2D::OnRender()
     glfwGetFramebufferSize(glfwGetCurrentContext(), &w, &h);
 
     m_proj = glm::ortho(0.0f, (float)w, 0.0f, (float)h, -1.0f, 1.0f);
-    m_view = glm::rotate(glm::mat4(1), glm::radians(m_rot), glm::vec3(0.0f, 0.0f, 1.0f)) * glm::translate(glm::mat4(1), glm::vec3(m_f, m_f2, 0.0f));
+    m_view = glm::translate(glm::mat4(1), glm::vec3(m_f, m_f2, 0.0f)) * glm::rotate(glm::mat4(1), glm::radians(m_rot), glm::vec3(0.0f, 0.0f, 1.0f));
 
     m_model1 = glm::translate(glm::mat4(1), glm::vec3(m_x, m_y, 0.0f));
     glm::mat4 u_MVP = m_proj * m_view * m_model1;
