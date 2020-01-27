@@ -1,5 +1,5 @@
 #ignore binary files
-main.exec
+/bin/main.exec
 
 #ignore .vscode
 .vscode/*
