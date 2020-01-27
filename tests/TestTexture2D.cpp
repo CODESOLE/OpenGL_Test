@@ -56,13 +56,16 @@ void TestTexture2D::OnRender()
 
     m_proj = glm::ortho(0.0f, (float)w, 0.0f, (float)h, -1.0f, 1.0f);
     m_view = glm::rotate(glm::mat4(1), glm::radians(m_rot), glm::vec3(0.0f, 0.0f, 1.0f)) * glm::translate(glm::mat4(1), glm::vec3(m_f, m_f2, 0.0f));
+
     m_model1 = glm::translate(glm::mat4(1), glm::vec3(m_x, m_y, 0.0f));
     glm::mat4 u_MVP = m_proj * m_view * m_model1;
+
     m_shader->Bind();
     m_shader->setUniformMat4f("u_MVP", u_MVP);
 
     m_va->Bind();
     m_ib->Bind();
+
     renderer.Draw(*m_va, *m_ib, *m_shader);
 
     m_texture2->Bind();
