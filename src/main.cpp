@@ -19,9 +19,12 @@
 #include "./../dep/imgui/imgui_impl_glfw_gl3.h"
 #include "./../tests/TestClearColor.hpp"
 #include "./../tests/TestTexture2D.hpp"
+#include "./../tests/Test3D.hpp"
+
 using namespace std::string_literals;
-#define cherno
-#ifdef cherno
+#define MAIN
+#ifdef MAIN
+
 /*  if (color.r >= 1.0f)
                 inc = -0.0001f;
             else if (color.r <= 0.0f)
@@ -50,7 +53,7 @@ int main(void)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    window = glfwCreateWindow(640, 480, "GL Example", NULL, NULL);
+    window = glfwCreateWindow(1024, 768, "GL Example", NULL, NULL);
 
     if (!window)
     {
@@ -100,6 +103,7 @@ int main(void)
 
         test_menu->RegisterTest<test::TestClearColor>("Clear Color Test");
         test_menu->RegisterTest<test::TestTexture2D>("Texture 2D Test");
+        test_menu->RegisterTest<test::Test3D>("3D Test");
 
         while (!glfwWindowShouldClose(window))
         {
