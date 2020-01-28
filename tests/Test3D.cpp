@@ -11,14 +11,14 @@
 namespace test
 {
 
-Test3D::Test3D()
+Test3D::Test3D() : m_proj(1.0f)
 {
 
     float verticesss[] = {
-        0.0f, 100.0f, 0.0f, 0.0f, 0.0f,
-        100.0f, 100.0f, 0.0f, 1.0f, 0.0f,
-        100.0f, 200.0f, 0.0f, 1.0f, 1.0f,
-        0.0f, 200.0f, 0.0f, 0.0f, 1.0f};
+        0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        100.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+        100.0f, 100.0f, 0.0f, 1.0f, 1.0f,
+        0.0f, 100.0f, 0.0f, 0.0f, 1.0f};
 
     unsigned int indecies[] = {0, 1, 2, 2, 3, 0};
 
@@ -52,21 +52,23 @@ void Test3D::OnRender()
     m_texture->Bind();
     glfwGetFramebufferSize(glfwGetCurrentContext(), &w, &h);
 
-    m_proj = glm::perspective(glm::radians(90.0f), ((float)w) / ((float)h), 1.0f, 100.0f);
+    m_proj = glm::perspective(glm::radians(90.0f), ((float)w) / ((float)h), 0.1f, 1000.0f);
 
     glm::vec3 camPos(m_camPX, m_camPY, m_camPZ);
-    glm::vec3 camLookAt(m_camRX, m_camRY, m_camRZ);
+    glm::vec3 camLookAt(m_camRX, m_camRX, m_camRZ);
     glm::vec3 camUp(0.0f, 1.0f, 0.0f);
+    glm::mat4 camView(1.0f);
+    camView = glm::lookAt(camPos, camLookAt, camUp);
 
-    glm::mat4 camView = glm::lookAt(camPos, camLookAt, camUp);
-
-    m_modelT = glm::translate(glm::mat4(1), glm::vec3(m_modelPX, m_modelPY, m_modelPZ));
-    m_modelR = glm::rotate(glm::mat4(1), glm::radians(0.0f), glm::vec3(m_modelRX, m_modelRY, m_modelRZ));
-    m_modelS = glm::scale(glm::mat4(1), glm::vec3(m_modelSX, m_modelSY, m_modelSZ));
+    m_modelT = glm::translate(glm::mat4(1.0f), glm::vec3(m_modelPX, m_modelPY, m_modelPZ));
+    m_modelR = glm::rotate(glm::mat4(1.0f), glm::radians(m_modelRX), glm::vec3(1.0f, 0.0f, 0.0f));
+    m_modelR = glm::rotate(glm::mat4(1.0f), glm::radians(m_modelRY), glm::vec3(0.0f, 1.0f, 0.0f));
+    m_modelR = glm::rotate(glm::mat4(1.0f), glm::radians(m_modelRZ), glm::vec3(0.0f, 0.0f, 1.0f));
+    m_modelS = glm::scale(glm::mat4(1.0f), glm::vec3(m_modelSX, m_modelSY, m_modelSZ));
 
     glm::mat4 m_model1 = m_modelT * m_modelR * m_modelS;
 
-    glm::mat4 u_MVP = m_proj * m_view * m_model1;
+    u_MVP = m_proj * camView * m_model1;
 
     m_shader->Bind();
     m_shader->setUniformMat4f("u_MVP", u_MVP);

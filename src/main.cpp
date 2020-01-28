@@ -53,7 +53,7 @@ int main(void)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    window = glfwCreateWindow(1024, 768, "GL Example", NULL, NULL);
+    window = glfwCreateWindow(600, 480, "GL Example", NULL, NULL);
 
     if (!window)
     {
