@@ -18,7 +18,7 @@ GLuint ShaderProgram::checkandGetUniformLocation(const char *varname) const
 
 void ShaderProgram::setUniformMat4f(const char *varName, const glm::mat4 &proj)
 {
-    GLErrCall(glUniformMatrix4fv(checkandGetUniformLocation(varName), 1, GL_FALSE, &proj[0][0]));
+    GLErrCall(glUniformMatrix4fv(checkandGetUniformLocation(varName), 1, GL_FALSE, glm::value_ptr(proj)));
 }
 
 void ShaderProgram::setUniformFloat4(const char *varname, glm::vec4 _value)

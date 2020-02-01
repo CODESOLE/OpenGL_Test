@@ -8,6 +8,7 @@
 #include <map>
 #include "./../dep/glm/vec4.hpp"
 #include "./../dep/glm/gtc/matrix_transform.hpp"
+#include "./../dep/glm/gtc/type_ptr.hpp"
 
 class ShaderProgram
 {

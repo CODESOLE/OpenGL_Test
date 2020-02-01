@@ -6,6 +6,7 @@
 #include "./../dep/glm/vec3.hpp"
 #include "./../dep/glm/vec4.hpp"
 #include "./../dep/glm/glm.hpp"
+#include "./../dep/glm/gtc/type_ptr.hpp"
 #include "./../dep/glm/gtc/matrix_transform.hpp"
 #include <cstdlib>
 #include <ctime>
