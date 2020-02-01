@@ -7,12 +7,15 @@
 #include "./../dep/glm/vec4.hpp"
 #include "./../dep/glm/glm.hpp"
 #include "./../dep/glm/gtc/matrix_transform.hpp"
+#include <cstdlib>
+#include <ctime>
 
 namespace test
 {
 
 Test3D::Test3D() : m_proj(1.0f)
 {
+    srand(time(0));
     std::vector<Vertex *> vertecies;
 
     for (size_t i = 0; i < 8; i++)
@@ -56,6 +59,8 @@ Test3D::Test3D() : m_proj(1.0f)
     m_ib = std::make_unique<IndexBuffer>(indecies, 36);
 
     m_shader = std::make_unique<ShaderProgram>("./../shaders/VertexShader_3D.vert", "./../shaders/FragmentShader_3D.frag");
+
+    GLErrCall(glEnable(GL_DEPTH_TEST));
 }
 
 Test3D::~Test3D()
@@ -69,17 +74,17 @@ void Test3D::OnUpdate(float deltaTime)
 void Test3D::OnRender()
 {
     GLErrCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
-    GLErrCall(glClear(GL_COLOR_BUFFER_BIT));
+    GLErrCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
     renderer renderer;
     glfwGetFramebufferSize(glfwGetCurrentContext(), &w, &h);
 
     m_proj = glm::perspective(glm::radians(90.0f), ((float)w) / ((float)h), 0.1f, 1000.0f);
 
-    glm::vec3 camPos(m_camPX, m_camPY, m_camPZ);
-    glm::vec3 camLookAt(0.0f, 0.0f, -1.0f);
+    glm::vec3 camPos(sin(glfwGetTime()) * 200.0f, cos(glfwGetTime()) * 200.0f + 100.0f, cos(glfwGetTime()) * 200.0f);
+    glm::vec3 camLookAt(0.0f, 0.0f, 0.0f);
     glm::vec3 camUp(0.0f, 1.0f, 0.0f);
     glm::mat4 camView(1.0f);
-    camView = glm::lookAt(camPos, camPos + camLookAt, camUp);
+    camView = glm::lookAt(camPos, camLookAt, camUp);
 
     m_modelT = glm::translate(glm::mat4(1.0f), glm::vec3(m_modelPX, m_modelPY, m_modelPZ));
     m_modelR = glm::rotate(glm::mat4(1.0f), glm::radians(m_modelRY), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -103,10 +108,10 @@ void Test3D::OnImGuiRender()
     ImGui::Text("Hello, world!");
     ImGui::SliderFloat("cameraPosX", &m_camPX, 0.0f, (float)w);
     ImGui::SliderFloat("cameraPosY", &m_camPY, 0.0f, (float)h);
-    ImGui::SliderFloat("cameraPosZ", &m_camPZ, 100.0f, -100.0f);
+    ImGui::SliderFloat("cameraPosZ", &m_camPZ, 1000.0f, -1000.0f);
 
-    ImGui::SliderFloat("cameraRotX", &m_camRX, 0.0f, 360.0f);
-    ImGui::SliderFloat("cameraRotY", &m_camRY, 0.0f, 360.0f);
+    ImGui::SliderFloat("cameraRotX", &m_camRX, 0.0f, 1.0f);
+    ImGui::SliderFloat("cameraRotY", &m_camRY, 0.0f, 1.0f);
     ImGui::SliderFloat("cameraRotZ", &m_camRZ, 0.0f, 360.0f);
 
     ImGui::SliderFloat("model1PosX", &m_modelPX, 0.0f, (float)w);
@@ -117,9 +122,9 @@ void Test3D::OnImGuiRender()
     ImGui::SliderFloat("model1RotY", &m_modelRY, 0.0f, 360.0f);
     ImGui::SliderFloat("model1RotZ", &m_modelRZ, 0.0f, 360.0f);
 
-    ImGui::SliderFloat("model1ScaleX", &m_modelSX, 0.0f, (float)w);
-    ImGui::SliderFloat("model1ScaleY", &m_modelSY, 0.0f, (float)h);
-    ImGui::SliderFloat("model1ScaleZ", &m_modelSZ, 0.0f, (float)h);
+    ImGui::SliderFloat("model1ScaleX", &m_modelSX, 0.0f, 1.0f);
+    ImGui::SliderFloat("model1ScaleY", &m_modelSY, 0.0f, 1.0f);
+    ImGui::SliderFloat("model1ScaleZ", &m_modelSZ, 0.0f, 1.0f);
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 }
