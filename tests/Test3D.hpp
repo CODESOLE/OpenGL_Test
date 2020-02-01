@@ -12,7 +12,7 @@ namespace test
 class Test3D : public Test
 {
 private:
-    float m_camPX = 0.0f, m_camPY = 0.0f, m_camPZ = 5.0f,
+    float m_camPX = 0.0f, m_camPY = 0.0f, m_camPZ = 80.0f,
           m_camRX = 0.0f, m_camRY = 0.0f, m_camRZ = 0.0f,
           m_modelPX = 0.0f, m_modelPY = 0.0f, m_modelPZ = 0.0f,
           m_modelRX = 0.0f, m_modelRY = 0.0f, m_modelRZ = 0.0f,
@@ -22,7 +22,6 @@ private:
     std::unique_ptr<VertexBuffer> m_vb;
     std::unique_ptr<IndexBuffer> m_ib;
     std::unique_ptr<ShaderProgram> m_shader;
-    std::unique_ptr<Texture> m_texture;
     glm::mat4 m_proj, m_view, m_modelT, m_modelR, m_modelS, u_MVP;
     int w, h;
 

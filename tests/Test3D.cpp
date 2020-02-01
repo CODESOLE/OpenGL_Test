@@ -13,27 +13,49 @@ namespace test
 
 Test3D::Test3D() : m_proj(1.0f)
 {
+    std::vector<Vertex *> vertecies;
 
-    float verticesss[] = {
+    for (size_t i = 0; i < 8; i++)
+    {
+        vertecies.push_back(new Vertex);
+        vertecies[i]->pos = glm::vec3(0.0f, 0.0f, 0.0f);
+        vertecies[i]->color = glm::vec4(((float)(rand() % 100)) / 100.0f, ((float)(rand() % 100)) / 100.0f, ((float)(rand() % 100)) / 100.0f, 1.0f);
+    }
+
+    vertecies[0]->pos = glm::vec3(0.0f, 100.0f, 50.0f);
+    vertecies[1]->pos = glm::vec3(100.0f, 100.0f, 50.0f);
+    vertecies[2]->pos = glm::vec3(100.0f, 200.0f, 50.0f);
+    vertecies[3]->pos = glm::vec3(0.0f, 200.0f, 50.0f);
+    vertecies[4]->pos = glm::vec3(0.0f, 100.0f, -50.0f);
+    vertecies[5]->pos = glm::vec3(100.0f, 100.0f, -50.0f);
+    vertecies[6]->pos = glm::vec3(100.0f, 200.0f, -50.0f);
+    vertecies[7]->pos = glm::vec3(0.0f, 200.0f, -50.0f);
+
+    /*   float verticesss[] = {
         0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
         100.0f, 0.0f, 0.0f, 1.0f, 0.0f,
         100.0f, 100.0f, 0.0f, 1.0f, 1.0f,
-        0.0f, 100.0f, 0.0f, 0.0f, 1.0f};
+        0.0f, 100.0f, 0.0f, 0.0f, 1.0f}; */
 
-    unsigned int indecies[] = {0, 1, 2, 2, 3, 0};
+    unsigned int indecies[] = {
+        0, 1, 2, 2, 3, 0, //onyuz
+        1, 5, 6, 6, 2, 1, //sağyuz
+        5, 4, 7, 7, 6, 5, //arkayuz
+        4, 0, 3, 3, 7, 4, //solyuz
+        3, 2, 6, 6, 7, 3, //ustyuz
+        0, 1, 5, 5, 4, 0  //altyuz
+    };
 
     m_va = std::make_unique<VertexArray>();
-    m_vb = std::make_unique<VertexBuffer>(verticesss, sizeof(verticesss));
+    m_vb = std::make_unique<VertexBuffer>(vertecies, vertecies.size() * 7 * sizeof(float));
 
     VertexBufferLayout layout;
     layout.Push<float>(3);
-    layout.Push<float>(2);
+    layout.Push<float>(4);
     m_va->AddBuffer(*m_vb, layout);
-    m_ib = std::make_unique<IndexBuffer>(indecies, 6);
+    m_ib = std::make_unique<IndexBuffer>(indecies, 36);
 
-    m_shader = std::make_unique<ShaderProgram>("./../shaders/VertexShader.vert", "./../shaders/FragmentShader.frag");
-
-    m_texture = std::make_unique<Texture>("./../res/arduino.png");
+    m_shader = std::make_unique<ShaderProgram>("./../shaders/VertexShader_3D.vert", "./../shaders/FragmentShader_3D.frag");
 }
 
 Test3D::~Test3D()
@@ -49,21 +71,18 @@ void Test3D::OnRender()
     GLErrCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
     GLErrCall(glClear(GL_COLOR_BUFFER_BIT));
     renderer renderer;
-    m_texture->Bind();
     glfwGetFramebufferSize(glfwGetCurrentContext(), &w, &h);
 
     m_proj = glm::perspective(glm::radians(90.0f), ((float)w) / ((float)h), 0.1f, 1000.0f);
 
     glm::vec3 camPos(m_camPX, m_camPY, m_camPZ);
-    glm::vec3 camLookAt(m_camRX, m_camRX, m_camRZ);
+    glm::vec3 camLookAt(0.0f, 0.0f, -1.0f);
     glm::vec3 camUp(0.0f, 1.0f, 0.0f);
     glm::mat4 camView(1.0f);
-    camView = glm::lookAt(camPos, camLookAt, camUp);
+    camView = glm::lookAt(camPos, camPos + camLookAt, camUp);
 
     m_modelT = glm::translate(glm::mat4(1.0f), glm::vec3(m_modelPX, m_modelPY, m_modelPZ));
-    m_modelR = glm::rotate(glm::mat4(1.0f), glm::radians(m_modelRX), glm::vec3(1.0f, 0.0f, 0.0f));
     m_modelR = glm::rotate(glm::mat4(1.0f), glm::radians(m_modelRY), glm::vec3(0.0f, 1.0f, 0.0f));
-    m_modelR = glm::rotate(glm::mat4(1.0f), glm::radians(m_modelRZ), glm::vec3(0.0f, 0.0f, 1.0f));
     m_modelS = glm::scale(glm::mat4(1.0f), glm::vec3(m_modelSX, m_modelSY, m_modelSZ));
 
     glm::mat4 m_model1 = m_modelT * m_modelR * m_modelS;
