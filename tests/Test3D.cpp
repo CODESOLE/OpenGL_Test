@@ -26,14 +26,14 @@ Test3D::Test3D() : m_proj(1.0f)
         vertecies[i]->color = glm::vec4(((float)(rand() % 100)) / 100.0f, ((float)(rand() % 100)) / 100.0f, ((float)(rand() % 100)) / 100.0f, 1.0f);
     }
 
-    vertecies[0]->pos = glm::vec3(0.0f, 100.0f, 50.0f);
-    vertecies[1]->pos = glm::vec3(100.0f, 100.0f, 50.0f);
-    vertecies[2]->pos = glm::vec3(100.0f, 200.0f, 50.0f);
-    vertecies[3]->pos = glm::vec3(0.0f, 200.0f, 50.0f);
-    vertecies[4]->pos = glm::vec3(0.0f, 100.0f, -50.0f);
-    vertecies[5]->pos = glm::vec3(100.0f, 100.0f, -50.0f);
-    vertecies[6]->pos = glm::vec3(100.0f, 200.0f, -50.0f);
-    vertecies[7]->pos = glm::vec3(0.0f, 200.0f, -50.0f);
+    vertecies[0]->pos = glm::vec3(-50.0f, -50.0f, 50.0f);
+    vertecies[1]->pos = glm::vec3(50.0f, -50.0f, 50.0f);
+    vertecies[2]->pos = glm::vec3(50.0f, 50.0f, 50.0f);
+    vertecies[3]->pos = glm::vec3(-50.0f, 50.0f, 50.0f);
+    vertecies[4]->pos = glm::vec3(-50.0f, -50.0f, -50.0f);
+    vertecies[5]->pos = glm::vec3(50.0f, -50.0f, -50.0f);
+    vertecies[6]->pos = glm::vec3(50.0f, 50.0f, -50.0f);
+    vertecies[7]->pos = glm::vec3(-50.0f, 50.0f, -50.0f);
 
     /*   float verticesss[] = {
         0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
@@ -81,19 +81,17 @@ void Test3D::OnRender()
 
     m_proj = glm::perspective(glm::radians(90.0f), ((float)w) / ((float)h), 0.1f, 1000.0f);
 
-    glm::vec3 camPos(sin(glfwGetTime()) * 200.0f, cos(glfwGetTime()) * 200.0f + 100.0f, cos(glfwGetTime()) * 200.0f);
+    glm::vec3 camPos(m_camPX, m_camPY, m_camPZ);
     glm::vec3 camLookAt(0.0f, 0.0f, 0.0f);
     glm::vec3 camUp(0.0f, 1.0f, 0.0f);
     glm::mat4 camView(1.0f);
     camView = glm::lookAt(camPos, camLookAt, camUp);
 
     m_modelT = glm::translate(glm::mat4(1.0f), glm::vec3(m_modelPX, m_modelPY, m_modelPZ));
-    m_modelR = glm::rotate(glm::mat4(1.0f), glm::radians(m_modelRY), glm::vec3(0.0f, 1.0f, 0.0f));
-    m_modelS = glm::scale(glm::mat4(1.0f), glm::vec3(m_modelSX, m_modelSY, m_modelSZ));
+    m_modelT = glm::rotate(m_modelT, glm::radians(m_modelRY), glm::vec3(0.0f, 1.0f, 0.0f));
+    m_modelT = glm::scale(m_modelT, glm::vec3(m_modelSX, m_modelSY, m_modelSZ));
 
-    glm::mat4 m_model1 = m_modelT * m_modelR * m_modelS;
-
-    u_MVP = m_proj * camView * m_model1;
+    u_MVP = m_proj * camView * m_modelT;
 
     m_shader->Bind();
     m_shader->setUniformMat4f("u_MVP", u_MVP);
