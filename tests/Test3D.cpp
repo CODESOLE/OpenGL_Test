@@ -14,7 +14,7 @@
 namespace test
 {
 
-Test3D::Test3D() : m_proj(1.0f)
+Test3D::Test3D() : m_proj(1.0f), m_camView(1.0f), m_modelT(1.0f)
 {
     srand(time(0));
     std::vector<Vertex *> vertecies;
@@ -84,14 +84,14 @@ void Test3D::OnRender()
     glm::vec3 camPos(m_camPX, m_camPY, m_camPZ);
     glm::vec3 camLookAt(0.0f, 0.0f, 0.0f);
     glm::vec3 camUp(0.0f, 1.0f, 0.0f);
-    glm::mat4 camView(1.0f);
-    camView = glm::lookAt(camPos, camLookAt, camUp);
 
-    m_modelT = glm::translate(glm::mat4(1.0f), glm::vec3(m_modelPX, m_modelPY, m_modelPZ));
-    m_modelT = glm::rotate(m_modelT, glm::radians(m_modelRY), glm::vec3(0.0f, 1.0f, 0.0f));
-    m_modelT = glm::scale(m_modelT, glm::vec3(m_modelSX, m_modelSY, m_modelSZ));
+    m_camView = glm::lookAt(camPos, camLookAt, camUp);
 
-    u_MVP = m_proj * camView * m_modelT;
+    Transform::TranslateXYZ(m_modelT, sin(glfwGetTime()) * 100, sin(glfwGetTime()) * 100, sin(glfwGetTime()) * 100);
+    Transform::RotateXYZ(m_modelT, glfwGetTime() * 100, sin(glfwGetTime()) * 100, sin(glfwGetTime()) * 100);
+    Transform::ScaleXYZ(m_modelT, sin(glfwGetTime()), sin(glfwGetTime()), sin(glfwGetTime()));
+
+    u_MVP = m_proj * m_camView * m_modelT;
 
     m_shader->Bind();
     m_shader->setUniformMat4f("u_MVP", u_MVP);

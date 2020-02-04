@@ -22,7 +22,7 @@ private:
     std::unique_ptr<VertexBuffer> m_vb;
     std::unique_ptr<IndexBuffer> m_ib;
     std::unique_ptr<ShaderProgram> m_shader;
-    glm::mat4 m_proj, m_view, m_modelT, m_modelR, m_modelS, u_MVP;
+    glm::mat4 m_proj, m_camView, m_modelT, u_MVP;
     int w, h;
 
 public:

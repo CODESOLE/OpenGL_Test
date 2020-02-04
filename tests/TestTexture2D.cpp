@@ -12,7 +12,7 @@
 namespace test
 {
 
-TestTexture2D::TestTexture2D()
+TestTexture2D::TestTexture2D() : m_trans(1.0f)
 {
 
     float verticesss[] = {
@@ -37,7 +37,6 @@ TestTexture2D::TestTexture2D()
     m_texture = std::make_unique<Texture>("./../res/arduino.png");
 
     m_texture2 = std::make_unique<Texture>("./../res/mikael-gustafsson-amongtrees-2-8.jpg");
-    double start = glfwGetTime();
 }
 
 TestTexture2D::~TestTexture2D()
@@ -59,15 +58,12 @@ void TestTexture2D::OnRender()
     glm::mat4 m_proj(1.0f);
     m_proj = glm::ortho(0.0f, (float)w, 0.0f, (float)h, -1.0f, 1.0f);
     glm::mat4 m_view(1.0f);
-    if (current - start < 10.0f)
-        m_view = glm::translate(m_view, glm::vec3(cos(50.0f * glfwGetTime()) * 10.0f, sin(50.0f * glfwGetTime()) * 10.0f, 0.0f));
 
-    glm::mat4 trans = glm::mat4(1.0f);
-    trans = glm::translate(trans, glm::vec3(500.5f, 500.5f, 0.0f));
-    trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-    trans = glm::scale(trans, glm::vec3(m_x, m_y, 1.0f));
+    m_trans = glm::translate(glm::mat4(1.f), glm::vec3(500.5f, 500.5f, 0.0f));
+    m_trans = glm::rotate(m_trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+    m_trans = glm::scale(m_trans, glm::vec3(m_x, m_y, 1.0f));
 
-    glm::mat4 u_MVP = m_proj * m_view * trans;
+    glm::mat4 u_MVP = m_proj * m_view * m_trans;
 
     m_shader->Bind();
     m_shader->setUniformMat4f("u_MVP", u_MVP);

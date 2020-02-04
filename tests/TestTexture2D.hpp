@@ -18,9 +18,8 @@ private:
     std::unique_ptr<IndexBuffer> m_ib;
     std::unique_ptr<ShaderProgram> m_shader, m_shader2;
     std::unique_ptr<Texture> m_texture, m_texture2;
-    glm::mat4 m_proj, m_view, m_model1, m_model2;
+    glm::mat4 m_proj, m_view, m_trans, m_model2;
     int w, h;
-    double start = 0.0;
 
 public:
     TestTexture2D();
