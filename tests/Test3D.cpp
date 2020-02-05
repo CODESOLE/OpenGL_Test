@@ -116,9 +116,10 @@ void Test3D::OnRender()
 
     m_proj = glm::perspective(glm::radians(camera.Zoom), ((float)w) / ((float)h), 0.1f, 10000.0f);
 
-    Transform::TranslateXYZ(m_modelT, sin(glfwGetTime()) * 100, sin(glfwGetTime()) * 100, sin(glfwGetTime()) * 100);
+    //Transform::TranslateXYZ(m_modelT, sin(glfwGetTime()) * 100, sin(glfwGetTime()) * 100, sin(glfwGetTime()) * 100);
+    Transform::TranslateXYZ(m_modelT, 0.f, 0.f, 300.f);
     Transform::RotateXYZ(m_modelT, glfwGetTime() * 100, sin(glfwGetTime()) * 100, sin(glfwGetTime()) * 100);
-    Transform::ScaleXYZ(m_modelT, sin(glfwGetTime()), sin(glfwGetTime()), sin(glfwGetTime()));
+    //Transform::ScaleXYZ(m_modelT, sin(glfwGetTime()), sin(glfwGetTime()), sin(glfwGetTime()));
 
     u_MVP = m_proj * camera.GetViewMatrix() * m_modelT;
 

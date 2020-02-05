@@ -83,6 +83,8 @@ public:
             Position -= Up * velocity;
         if (direction == DOWN)
             Position += Up * velocity;
+
+        //Position.y = 0.f; enable to stick to ground
     }
 
     // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
