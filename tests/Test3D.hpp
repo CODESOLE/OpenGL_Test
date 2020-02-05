@@ -23,13 +23,17 @@ private:
     std::unique_ptr<IndexBuffer> m_ib;
     std::unique_ptr<ShaderProgram> m_shader;
     glm::mat4 m_proj, m_camView, m_modelT, u_MVP;
+    glm::vec3 m_camPos, m_camLookAt, m_camUp;
     int w, h;
+    float lastX, lastY;
+    bool firstMouse;
+    double yaw, pitch;
 
 public:
     Test3D();
     ~Test3D();
 
-    void OnUpdate(float deltaTime) override;
+    void OnUpdate(float deltaTime, GLFWwindow *window, double xpos, double ypos) override;
     void OnRender() override;
     void OnImGuiRender() override;
 };

@@ -33,14 +33,23 @@ using namespace std::string_literals;
             color.r += inc;
             color.g += inc;
             color.b += inc; */
+
 static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     {
-        ImGui_ImplGlfwGL3_Shutdown();
-        ImGui::DestroyContext();
         glfwSetWindowShouldClose(window, GL_TRUE);
+        glfwDestroyWindow(window);
+        glfwTerminate();
     }
+}
+
+double xxpos, yypos;
+
+void mouse_callback(GLFWwindow *window, double xpos, double ypos)
+{
+    xxpos = xpos;
+    yypos = ypos;
 }
 
 int main(void)
@@ -82,14 +91,18 @@ int main(void)
               << '\n';
 
     glfwSetKeyCallback(window, key_callback);
+    glfwSetCursorPosCallback(window, mouse_callback);
+
+    int w, h;
+
+    float deltaTime = 0.0f; // Time between current frame and last frame
+    float lastFrame = 0.0f; // Time of last frame
 
     {
 
         GLErrCall(glEnable(GL_BLEND));
         GLErrCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
         GLErrCall(glBlendEquation(GL_FUNC_ADD));
-
-        int w, h;
 
         renderer renderer;
 
@@ -108,6 +121,10 @@ int main(void)
         while (!glfwWindowShouldClose(window))
         {
 
+            float currentFrame = glfwGetTime();
+            deltaTime = currentFrame - lastFrame;
+            lastFrame = currentFrame;
+
             glfwGetFramebufferSize(window, &w, &h); //auto scale frame size
             glViewport(0, 0, w, h);                 //auto scale frame size
 
@@ -117,7 +134,7 @@ int main(void)
 
             if (currentTest)
             {
-                currentTest->OnUpdate(0.0f);
+                currentTest->OnUpdate(deltaTime, window, xxpos, yypos);
                 currentTest->OnRender();
                 ImGui::Begin("Test");
                 if (currentTest != (test::Test *)test_menu && ImGui::Button("<-"))
@@ -134,15 +151,14 @@ int main(void)
 
             glfwSwapBuffers(window);
             glfwPollEvents();
-        }
+        } //while End
         delete currentTest;
         if (currentTest != (test::Test *)test_menu)
             delete test_menu;
+
+        ImGui_ImplGlfwGL3_Shutdown();
+        ImGui::DestroyContext();
     }
-
-    ImGui_ImplGlfwGL3_Shutdown();
-    ImGui::DestroyContext();
-
     glfwDestroyWindow(window);
     glfwTerminate();
     return 0;

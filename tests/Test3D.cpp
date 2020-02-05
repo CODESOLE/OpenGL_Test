@@ -14,7 +14,9 @@
 namespace test
 {
 
-Test3D::Test3D() : m_proj(1.0f), m_camView(1.0f), m_modelT(1.0f)
+Test3D::Test3D() : m_proj(1.0f), m_camView(1.0f), m_modelT(1.0f),
+                   m_camPos(0.0f, 0.0f, 300.0f), m_camLookAt(0.f, 0.f, -1.f), m_camUp(0.f, 1.f, 0.f),
+                   lastX(((float)w) / 2.f), lastY(((float)h) / 2.f), firstMouse(true), yaw(0.0), pitch(0.0)
 {
     srand(time(0));
     std::vector<Vertex *> vertecies;
@@ -68,8 +70,57 @@ Test3D::~Test3D()
 {
 }
 
-void Test3D::OnUpdate(float deltaTime)
+void Test3D::OnUpdate(float deltaTime, GLFWwindow *window, double xpos, double ypos)
 {
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GL_TRUE);
+
+    float cameraSpeed = 1000.f * deltaTime; // adjust accordingly
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        m_camPos += cameraSpeed * m_camLookAt;
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        m_camPos -= cameraSpeed * m_camLookAt;
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        m_camPos -= glm::normalize(glm::cross(m_camLookAt, m_camUp)) * cameraSpeed;
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        m_camPos += glm::normalize(glm::cross(m_camLookAt, m_camUp)) * cameraSpeed;
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+        m_camPos += m_camUp * cameraSpeed;
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+        m_camPos -= m_camUp * cameraSpeed;
+
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos;
+    lastX = xpos;
+    lastY = ypos;
+
+    float sensitivity = 0.05;
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    yaw += xoffset;
+    pitch += yoffset;
+
+    if (pitch > 89.0f)
+        pitch = 89.0f;
+    if (pitch < -89.0f)
+        pitch = -89.0f;
+
+    glm::vec3 direction;
+    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    direction.y = sin(glm::radians(pitch));
+    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    m_camLookAt = glm::normalize(direction);
 }
 
 void Test3D::OnRender()
@@ -81,15 +132,12 @@ void Test3D::OnRender()
 
     m_proj = glm::perspective(glm::radians(90.0f), ((float)w) / ((float)h), 0.1f, 1000.0f);
 
-    glm::vec3 camPos(m_camPX, m_camPY, m_camPZ);
-    glm::vec3 camLookAt(0.0f, 0.0f, 0.0f);
-    glm::vec3 camUp(0.0f, 1.0f, 0.0f);
+    m_camView = glm::lookAt(m_camPos, m_camPos + m_camLookAt, m_camUp);
 
-    m_camView = glm::lookAt(camPos, camLookAt, camUp);
-
-    Transform::TranslateXYZ(m_modelT, sin(glfwGetTime()) * 100, sin(glfwGetTime()) * 100, sin(glfwGetTime()) * 100);
+    //Transform::TranslateXYZ(m_modelT, sin(glfwGetTime()) * 100, sin(glfwGetTime()) * 100, sin(glfwGetTime()) * 100);
+    Transform::TranslateXYZ(m_modelT, 10.f, 10.f, 0.f);
     Transform::RotateXYZ(m_modelT, glfwGetTime() * 100, sin(glfwGetTime()) * 100, sin(glfwGetTime()) * 100);
-    Transform::ScaleXYZ(m_modelT, sin(glfwGetTime()), sin(glfwGetTime()), sin(glfwGetTime()));
+    //Transform::ScaleXYZ(m_modelT, sin(glfwGetTime()), sin(glfwGetTime()), sin(glfwGetTime()));
 
     u_MVP = m_proj * m_camView * m_modelT;
 

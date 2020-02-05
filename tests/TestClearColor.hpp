@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Test.hpp"
+#include <GLFW/glfw3.h>
 
 namespace test
 {
@@ -13,7 +14,7 @@ public:
     TestClearColor();
     ~TestClearColor();
 
-    void OnUpdate(float deltaTime) override;
+    void OnUpdate(float deltaTime, GLFWwindow *window, double xpos, double ypos) override;
     void OnRender() override;
     void OnImGuiRender() override;
 };
