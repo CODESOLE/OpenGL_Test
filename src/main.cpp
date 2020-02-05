@@ -25,15 +25,6 @@ using namespace std::string_literals;
 #define MAIN
 #ifdef MAIN
 
-/*  if (color.r >= 1.0f)
-                inc = -0.0001f;
-            else if (color.r <= 0.0f)
-                inc = 0.0001f;
-
-            color.r += inc;
-            color.g += inc;
-            color.b += inc; */
-
 static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)

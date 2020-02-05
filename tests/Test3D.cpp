@@ -38,12 +38,6 @@ Test3D::Test3D() : m_proj(1.0f), m_camView(1.0f), m_modelT(1.0f),
     vertecies[6]->pos = glm::vec3(50.0f, 50.0f, -50.0f);
     vertecies[7]->pos = glm::vec3(-50.0f, 50.0f, -50.0f);
 
-    /*   float verticesss[] = {
-        0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-        100.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-        100.0f, 100.0f, 0.0f, 1.0f, 1.0f,
-        0.0f, 100.0f, 0.0f, 0.0f, 1.0f}; */
-
     unsigned int indecies[] = {
         0, 1, 2, 2, 3, 0, //onyuz
         1, 5, 6, 6, 2, 1, //sağyuz
