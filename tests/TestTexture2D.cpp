@@ -43,7 +43,7 @@ TestTexture2D::~TestTexture2D()
 {
 }
 
-void TestTexture2D::OnUpdate(float deltaTime, GLFWwindow *window, double xpos, double ypos)
+void TestTexture2D::OnUpdate(float deltaTime, GLFWwindow *window, double xpos, double ypos, double xoffset, double yoffset)
 {
 }
 

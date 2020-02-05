@@ -12,7 +12,7 @@ TestClearColor::~TestClearColor()
 {
 }
 
-void TestClearColor::OnUpdate(float deltaTime, GLFWwindow *window, double xpos, double ypos)
+void TestClearColor::OnUpdate(float deltaTime, GLFWwindow *window, double xpos, double ypos, double xoffset, double yoffset)
 {
 }
 

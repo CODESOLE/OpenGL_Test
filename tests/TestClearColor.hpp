@@ -14,7 +14,7 @@ public:
     TestClearColor();
     ~TestClearColor();
 
-    void OnUpdate(float deltaTime, GLFWwindow *window, double xpos, double ypos) override;
+    void OnUpdate(float deltaTime, GLFWwindow *window, double xpos, double ypos, double xoffset, double yoffset) override;
     void OnRender() override;
     void OnImGuiRender() override;
 };

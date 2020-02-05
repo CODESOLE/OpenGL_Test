@@ -44,12 +44,18 @@ static void key_callback(GLFWwindow *window, int key, int scancode, int action, 
     }
 }
 
-double xxpos, yypos;
+double xxpos, yypos, scrllX = 0.0, scrllY = 0.0;
 
 void mouse_callback(GLFWwindow *window, double xpos, double ypos)
 {
     xxpos = xpos;
     yypos = ypos;
+}
+
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
+{
+    scrllX = xoffset;
+    scrllY = yoffset;
 }
 
 int main(void)
@@ -92,6 +98,7 @@ int main(void)
 
     glfwSetKeyCallback(window, key_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetScrollCallback(window, scroll_callback);
 
     int w, h;
 
@@ -134,7 +141,7 @@ int main(void)
 
             if (currentTest)
             {
-                currentTest->OnUpdate(deltaTime, window, xxpos, yypos);
+                currentTest->OnUpdate(deltaTime, window, xxpos, yypos, scrllX, scrllY);
                 currentTest->OnRender();
                 ImGui::Begin("Test");
                 if (currentTest != (test::Test *)test_menu && ImGui::Button("<-"))

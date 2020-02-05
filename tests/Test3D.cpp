@@ -16,7 +16,8 @@ namespace test
 
 Test3D::Test3D() : m_proj(1.0f), m_camView(1.0f), m_modelT(1.0f),
                    m_camPos(0.0f, 0.0f, 300.0f), m_camLookAt(0.f, 0.f, -1.f), m_camUp(0.f, 1.f, 0.f),
-                   lastX(((float)w) / 2.f), lastY(((float)h) / 2.f), firstMouse(true), yaw(0.0), pitch(0.0)
+                   lastX(((float)w) / 2.f), lastY(((float)h) / 2.f), firstMouse(true), yaw(0.0), pitch(0.0), fov(45.0),
+                   camera(glm::vec3(0.f, 0.f, 300.f))
 {
     srand(time(0));
     std::vector<Vertex *> vertecies;
@@ -70,28 +71,33 @@ Test3D::~Test3D()
 {
 }
 
-void Test3D::OnUpdate(float deltaTime, GLFWwindow *window, double xpos, double ypos)
+void Test3D::OnUpdate(float deltaTime, GLFWwindow *window, double xpos, double ypos, double scroll_xoffset, double scroll_yoffset)
 {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
+    //---------keyboard event
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
 
-    float cameraSpeed = 1000.f * deltaTime; // adjust accordingly
+    float cameraSpeed = 500.f * deltaTime; // adjust accordingly
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        m_camPos += cameraSpeed * m_camLookAt;
+        camera.ProcessKeyboard(FORWARD, cameraSpeed);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        m_camPos -= cameraSpeed * m_camLookAt;
+        camera.ProcessKeyboard(BACKWARD, cameraSpeed);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        m_camPos -= glm::normalize(glm::cross(m_camLookAt, m_camUp)) * cameraSpeed;
+        camera.ProcessKeyboard(LEFT, cameraSpeed);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        m_camPos += glm::normalize(glm::cross(m_camLookAt, m_camUp)) * cameraSpeed;
+        camera.ProcessKeyboard(RIGHT, cameraSpeed);
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-        m_camPos += m_camUp * cameraSpeed;
+        camera.ProcessKeyboard(UP, cameraSpeed);
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-        m_camPos -= m_camUp * cameraSpeed;
+        camera.ProcessKeyboard(DOWN, cameraSpeed);
 
+    //---------mouse scroll zoom
+    camera.ProcessMouseScroll(scroll_yoffset);
+
+    //---------mouse looka round
     if (firstMouse)
     {
         lastX = xpos;
@@ -104,23 +110,7 @@ void Test3D::OnUpdate(float deltaTime, GLFWwindow *window, double xpos, double y
     lastX = xpos;
     lastY = ypos;
 
-    float sensitivity = 0.05;
-    xoffset *= sensitivity;
-    yoffset *= sensitivity;
-
-    yaw += xoffset;
-    pitch += yoffset;
-
-    if (pitch > 89.0f)
-        pitch = 89.0f;
-    if (pitch < -89.0f)
-        pitch = -89.0f;
-
-    glm::vec3 direction;
-    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    direction.y = sin(glm::radians(pitch));
-    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    m_camLookAt = glm::normalize(direction);
+    camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 void Test3D::OnRender()
@@ -130,16 +120,13 @@ void Test3D::OnRender()
     renderer renderer;
     glfwGetFramebufferSize(glfwGetCurrentContext(), &w, &h);
 
-    m_proj = glm::perspective(glm::radians(90.0f), ((float)w) / ((float)h), 0.1f, 1000.0f);
+    m_proj = glm::perspective(glm::radians(camera.Zoom), ((float)w) / ((float)h), 0.1f, 10000.0f);
 
-    m_camView = glm::lookAt(m_camPos, m_camPos + m_camLookAt, m_camUp);
-
-    //Transform::TranslateXYZ(m_modelT, sin(glfwGetTime()) * 100, sin(glfwGetTime()) * 100, sin(glfwGetTime()) * 100);
-    Transform::TranslateXYZ(m_modelT, 10.f, 10.f, 0.f);
+    Transform::TranslateXYZ(m_modelT, sin(glfwGetTime()) * 100, sin(glfwGetTime()) * 100, sin(glfwGetTime()) * 100);
     Transform::RotateXYZ(m_modelT, glfwGetTime() * 100, sin(glfwGetTime()) * 100, sin(glfwGetTime()) * 100);
-    //Transform::ScaleXYZ(m_modelT, sin(glfwGetTime()), sin(glfwGetTime()), sin(glfwGetTime()));
+    Transform::ScaleXYZ(m_modelT, sin(glfwGetTime()), sin(glfwGetTime()), sin(glfwGetTime()));
 
-    u_MVP = m_proj * m_camView * m_modelT;
+    u_MVP = m_proj * camera.GetViewMatrix() * m_modelT;
 
     m_shader->Bind();
     m_shader->setUniformMat4f("u_MVP", u_MVP);
@@ -152,27 +139,6 @@ void Test3D::OnRender()
 
 void Test3D::OnImGuiRender()
 {
-    ImGui::Text("Hello, world!");
-    ImGui::SliderFloat("cameraPosX", &m_camPX, 0.0f, (float)w);
-    ImGui::SliderFloat("cameraPosY", &m_camPY, 0.0f, (float)h);
-    ImGui::SliderFloat("cameraPosZ", &m_camPZ, 1000.0f, -1000.0f);
-
-    ImGui::SliderFloat("cameraRotX", &m_camRX, 0.0f, 1.0f);
-    ImGui::SliderFloat("cameraRotY", &m_camRY, 0.0f, 1.0f);
-    ImGui::SliderFloat("cameraRotZ", &m_camRZ, 0.0f, 360.0f);
-
-    ImGui::SliderFloat("model1PosX", &m_modelPX, 0.0f, (float)w);
-    ImGui::SliderFloat("model1PosY", &m_modelPY, 0.0f, (float)h);
-    ImGui::SliderFloat("model1PosZ", &m_modelPZ, 100.0f, -100.0f);
-
-    ImGui::SliderFloat("model1RotX", &m_modelRX, 0.0f, 360.0f);
-    ImGui::SliderFloat("model1RotY", &m_modelRY, 0.0f, 360.0f);
-    ImGui::SliderFloat("model1RotZ", &m_modelRZ, 0.0f, 360.0f);
-
-    ImGui::SliderFloat("model1ScaleX", &m_modelSX, 0.0f, 1.0f);
-    ImGui::SliderFloat("model1ScaleY", &m_modelSY, 0.0f, 1.0f);
-    ImGui::SliderFloat("model1ScaleZ", &m_modelSZ, 0.0f, 1.0f);
-
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 }
 

@@ -5,6 +5,7 @@
 #include "./../src/VertexBuffer.hpp"
 #include "./../src/IndexBuffer.hpp"
 #include "./../src/Texture.hpp"
+#include "./../src/Camera.hpp"
 #include <memory>
 
 namespace test
@@ -27,13 +28,14 @@ private:
     int w, h;
     float lastX, lastY;
     bool firstMouse;
-    double yaw, pitch;
+    double yaw, pitch, fov;
+    Camera camera;
 
 public:
     Test3D();
     ~Test3D();
 
-    void OnUpdate(float deltaTime, GLFWwindow *window, double xpos, double ypos) override;
+    void OnUpdate(float deltaTime, GLFWwindow *window, double xpos, double ypos, double xoffset, double yoffset) override;
     void OnRender() override;
     void OnImGuiRender() override;
 };
