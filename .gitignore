@@ -3,3 +3,6 @@
 
 #ignore .vscode
 .vscode/*
+
+#ignore .ini files
+/src/imgui.ini
