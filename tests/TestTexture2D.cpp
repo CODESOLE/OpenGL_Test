@@ -83,13 +83,8 @@ void TestTexture2D::OnRender()
 
 void TestTexture2D::OnImGuiRender()
 {
-    ImGui::Text("Hello, world!");
-    ImGui::SliderFloat("cameraX", &m_f, 0.0f, (float)w);
-    ImGui::SliderFloat("cameraY", &m_f2, 0.0f, (float)h);
-    ImGui::SliderFloat("cameraRot", &m_rot, 0.0f, 360.0f);
-
-    ImGui::SliderFloat("model1X", &m_x, 0.0f, 1.0f);
-    ImGui::SliderFloat("model1Y", &m_y, 0.0f, 1.0f);
+    ImGui::SliderFloat("model1ScaleX", &m_x, 0.0f, 1.0f);
+    ImGui::SliderFloat("model1ScaleY", &m_y, 0.0f, 1.0f);
 
     ImGui::SliderFloat("model2X", &m_a, 0.0f, (float)w);
     ImGui::SliderFloat("model2Y", &m_b, 0.0f, (float)h);

@@ -134,6 +134,8 @@ void Test3D::OnRender()
 
 void Test3D::OnImGuiRender()
 {
+    ImGui::Text("Use W, A, S, D, Q, E to fly around and use mouse to control the camera angle!");
+    ImGui::Text("Press ESC to Exit!");
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 }
 
