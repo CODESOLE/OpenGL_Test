@@ -1,8 +1,5 @@
 #ignore binary files
 /bin/main.exec
 
-#ignore .vscode
-.vscode/*
-
 #ignore .ini files
 /src/imgui.ini
