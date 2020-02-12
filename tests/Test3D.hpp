@@ -13,12 +13,6 @@ namespace test
 class Test3D : public Test
 {
 private:
-    float m_camPX = 0.0f, m_camPY = 0.0f, m_camPZ = 500.0f,
-          m_camRX = 0.0f, m_camRY = 0.0f, m_camRZ = 0.0f,
-          m_modelPX = 0.0f, m_modelPY = 0.0f, m_modelPZ = 0.0f,
-          m_modelRX = 0.0f, m_modelRY = 0.0f, m_modelRZ = 0.0f,
-          m_modelSX = 1.0f, m_modelSY = 1.0f, m_modelSZ = 1.0f;
-
     std::unique_ptr<VertexArray> m_va;
     std::unique_ptr<VertexBuffer> m_vb;
     std::unique_ptr<IndexBuffer> m_ib;

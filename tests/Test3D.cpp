@@ -39,12 +39,12 @@ Test3D::Test3D() : m_proj(1.0f), m_camView(1.0f), m_modelT(1.0f),
     vertecies[7]->pos = glm::vec3(-50.0f, 50.0f, -50.0f);
 
     unsigned int indecies[] = {
-        0, 1, 2, 2, 3, 0, //onyuz
-        1, 5, 6, 6, 2, 1, //sağyuz
-        5, 4, 7, 7, 6, 5, //arkayuz
-        4, 0, 3, 3, 7, 4, //solyuz
-        3, 2, 6, 6, 7, 3, //ustyuz
-        0, 1, 5, 5, 4, 0  //altyuz
+        0, 1, 2, 2, 3, 0, //front
+        1, 5, 6, 6, 2, 1, //right
+        5, 4, 7, 7, 6, 5, //back
+        4, 0, 3, 3, 7, 4, //left
+        3, 2, 6, 6, 7, 3, //up
+        0, 1, 5, 5, 4, 0  //bottom
     };
 
     m_va = std::make_unique<VertexArray>();
@@ -91,7 +91,7 @@ void Test3D::OnUpdate(float deltaTime, GLFWwindow *window, double xpos, double y
     //---------mouse scroll zoom
     camera.ProcessMouseScroll(scroll_yoffset);
 
-    //---------mouse looka round
+    //---------mouse look around
     if (firstMouse)
     {
         lastX = xpos;
