@@ -7,18 +7,19 @@
 #include "./../dep/glm/vec4.hpp"
 #include "./../dep/glm/glm.hpp"
 #include "./../dep/glm/gtc/matrix_transform.hpp"
+#include <chrono>
 
 namespace test
 {
 
-TestTexture2D::TestTexture2D()
+TestTexture2D::TestTexture2D() : m_trans(1.0f)
 {
 
     float verticesss[] = {
-        0.0f, 100.0f, 0.0f, 0.0f, 0.0f,
-        100.0f, 100.0f, 0.0f, 1.0f, 0.0f,
-        100.0f, 200.0f, 0.0f, 1.0f, 1.0f,
-        0.0f, 200.0f, 0.0f, 0.0f, 1.0f};
+        -50.0f, -50.0f, 0.0f, 0.0f, 0.0f,
+        50.0f, -50.0f, 0.0f, 1.0f, 0.0f,
+        50.0f, 50.0f, 0.0f, 1.0f, 1.0f,
+        -50.0f, 50.0f, 0.0f, 0.0f, 1.0f};
 
     unsigned int indecies[] = {0, 1, 2, 2, 3, 0};
 
@@ -42,23 +43,27 @@ TestTexture2D::~TestTexture2D()
 {
 }
 
-void TestTexture2D::OnUpdate(float deltaTime)
+void TestTexture2D::OnUpdate(float deltaTime, GLFWwindow *window, double xpos, double ypos, double xoffset, double yoffset)
 {
 }
 
 void TestTexture2D::OnRender()
 {
+    double current = glfwGetTime();
     GLErrCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
     GLErrCall(glClear(GL_COLOR_BUFFER_BIT));
     renderer renderer;
     m_texture->Bind();
     glfwGetFramebufferSize(glfwGetCurrentContext(), &w, &h);
-
+    glm::mat4 m_proj(1.0f);
     m_proj = glm::ortho(0.0f, (float)w, 0.0f, (float)h, -1.0f, 1.0f);
-    m_view = glm::translate(glm::mat4(1), glm::vec3(m_f, m_f2, 0.0f)) * glm::rotate(glm::mat4(1), glm::radians(m_rot), glm::vec3(0.0f, 0.0f, 1.0f));
+    glm::mat4 m_view(1.0f);
 
-    m_model1 = glm::translate(glm::mat4(1), glm::vec3(m_x, m_y, 0.0f));
-    glm::mat4 u_MVP = m_proj * m_view * m_model1;
+    m_trans = glm::translate(glm::mat4(1.f), glm::vec3(500.5f, 500.5f, 0.0f));
+    m_trans = glm::rotate(m_trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+    m_trans = glm::scale(m_trans, glm::vec3(m_x, m_y, 1.0f));
+
+    glm::mat4 u_MVP = m_proj * m_view * m_trans;
 
     m_shader->Bind();
     m_shader->setUniformMat4f("u_MVP", u_MVP);
@@ -83,8 +88,8 @@ void TestTexture2D::OnImGuiRender()
     ImGui::SliderFloat("cameraY", &m_f2, 0.0f, (float)h);
     ImGui::SliderFloat("cameraRot", &m_rot, 0.0f, 360.0f);
 
-    ImGui::SliderFloat("model1X", &m_x, 0.0f, (float)w);
-    ImGui::SliderFloat("model1Y", &m_y, 0.0f, (float)h);
+    ImGui::SliderFloat("model1X", &m_x, 0.0f, 1.0f);
+    ImGui::SliderFloat("model1Y", &m_y, 0.0f, 1.0f);
 
     ImGui::SliderFloat("model2X", &m_a, 0.0f, (float)w);
     ImGui::SliderFloat("model2Y", &m_b, 0.0f, (float)h);

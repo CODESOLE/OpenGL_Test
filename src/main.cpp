@@ -19,25 +19,34 @@
 #include "./../dep/imgui/imgui_impl_glfw_gl3.h"
 #include "./../tests/TestClearColor.hpp"
 #include "./../tests/TestTexture2D.hpp"
-using namespace std::string_literals;
-#define cherno
-#ifdef cherno
-/*  if (color.r >= 1.0f)
-                inc = -0.0001f;
-            else if (color.r <= 0.0f)
-                inc = 0.0001f;
+#include "./../tests/Test3D.hpp"
 
-            color.r += inc;
-            color.g += inc;
-            color.b += inc; */
+using namespace std::string_literals;
+#define MAIN
+#ifdef MAIN
+
 static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     {
-        ImGui_ImplGlfwGL3_Shutdown();
-        ImGui::DestroyContext();
         glfwSetWindowShouldClose(window, GL_TRUE);
+        glfwDestroyWindow(window);
+        glfwTerminate();
     }
+}
+
+double xxpos, yypos, scrllX = 0.0, scrllY = 0.0;
+
+void mouse_callback(GLFWwindow *window, double xpos, double ypos)
+{
+    xxpos = xpos;
+    yypos = ypos;
+}
+
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
+{
+    scrllX = xoffset;
+    scrllY = yoffset;
 }
 
 int main(void)
@@ -50,7 +59,7 @@ int main(void)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    window = glfwCreateWindow(640, 480, "GL Example", NULL, NULL);
+    window = glfwCreateWindow(600, 480, "GL Example", NULL, NULL);
 
     if (!window)
     {
@@ -79,14 +88,19 @@ int main(void)
               << '\n';
 
     glfwSetKeyCallback(window, key_callback);
+    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetScrollCallback(window, scroll_callback);
+
+    int w, h;
+
+    float deltaTime = 0.0f; // Time between current frame and last frame
+    float lastFrame = 0.0f; // Time of last frame
 
     {
 
         GLErrCall(glEnable(GL_BLEND));
         GLErrCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
         GLErrCall(glBlendEquation(GL_FUNC_ADD));
-
-        int w, h;
 
         renderer renderer;
 
@@ -100,9 +114,14 @@ int main(void)
 
         test_menu->RegisterTest<test::TestClearColor>("Clear Color Test");
         test_menu->RegisterTest<test::TestTexture2D>("Texture 2D Test");
+        test_menu->RegisterTest<test::Test3D>("3D Test");
 
         while (!glfwWindowShouldClose(window))
         {
+
+            float currentFrame = glfwGetTime();
+            deltaTime = currentFrame - lastFrame;
+            lastFrame = currentFrame;
 
             glfwGetFramebufferSize(window, &w, &h); //auto scale frame size
             glViewport(0, 0, w, h);                 //auto scale frame size
@@ -113,7 +132,7 @@ int main(void)
 
             if (currentTest)
             {
-                currentTest->OnUpdate(0.0f);
+                currentTest->OnUpdate(deltaTime, window, xxpos, yypos, scrllX, scrllY);
                 currentTest->OnRender();
                 ImGui::Begin("Test");
                 if (currentTest != (test::Test *)test_menu && ImGui::Button("<-"))
@@ -130,15 +149,14 @@ int main(void)
 
             glfwSwapBuffers(window);
             glfwPollEvents();
-        }
+        } //while End
         delete currentTest;
         if (currentTest != (test::Test *)test_menu)
             delete test_menu;
+
+        ImGui_ImplGlfwGL3_Shutdown();
+        ImGui::DestroyContext();
     }
-
-    ImGui_ImplGlfwGL3_Shutdown();
-    ImGui::DestroyContext();
-
     glfwDestroyWindow(window);
     glfwTerminate();
     return 0;

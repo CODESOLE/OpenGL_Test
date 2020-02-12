@@ -4,7 +4,7 @@ namespace test
 {
 Test::Test() {}
 Test::~Test() {}
-void Test::OnUpdate(float deltaTime) {}
+void Test::OnUpdate(float deltaTime, GLFWwindow *window, double xpos, double ypos, double xoffset, double yoffset) {}
 void Test::OnRender() {}
 void Test::OnImGuiRender() {}
 
