@@ -8,6 +8,10 @@ First install Visual Studio Code :<br />
 `snap install code`<br />
 Secondly install necessary libs, copy-paste terminal this :<br />
     
-`sudo apt-get update; sudo apt-get install build-essential libevent-pthreads-2.1-6 doxygen xorg-dev libglu1-mesa-dev;sudo apt-get install libglfw3-dev;sudo apt-get install libglew-dev`
+`sudo apt-get update; sudo apt-get install build-essential libevent-pthreads-2.1-6 doxygen xorg-dev libglu1-mesa-dev;sudo apt-get install libglfw3-dev;sudo apt-get install libglew-dev`<br />
+
+Pay attention to libevent-pthreads-`<VERSION>` this version can be change, install according to up to date version
+    
+Finally download this repo extract it and open that folder with vs code press F5 to run it, by the way don't forget to install Microsoft's C/C++ extension.
 
 Currently just runs on Linux.
