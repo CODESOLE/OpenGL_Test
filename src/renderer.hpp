@@ -31,8 +31,6 @@ bool GLLogCall(const char *funcName, const char *file, int line);
 
 class renderer
 {
-private:
-    /* data */
 public:
     void Draw(const VertexArray &va, const IndexBuffer &ib, const ShaderProgram &shader) const;
     void Clear() const;

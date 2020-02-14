@@ -12,7 +12,7 @@ namespace test
 class TestTexture2D : public Test
 {
 private:
-    float m_f = 0.0f, m_rot = 0.0f, m_f2 = 0.0f, m_x = 1.0f, m_y = 1.0f, m_a = 0.0f, m_b = 0.0f;
+    float m_x = 1.0f, m_y = 1.0f, m_a = 0.0f, m_b = 0.0f;
     std::unique_ptr<VertexArray> m_va;
     std::unique_ptr<VertexBuffer> m_vb;
     std::unique_ptr<IndexBuffer> m_ib;

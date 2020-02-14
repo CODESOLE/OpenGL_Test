@@ -7,12 +7,11 @@
 #include "./../dep/glm/vec4.hpp"
 #include "./../dep/glm/glm.hpp"
 #include "./../dep/glm/gtc/matrix_transform.hpp"
-#include <chrono>
 
 namespace test
 {
 
-TestTexture2D::TestTexture2D() : m_trans(1.0f)
+TestTexture2D::TestTexture2D() : m_proj(1.0f), m_view(1.0f), m_trans(1.0f)
 {
 
     float verticesss[] = {
@@ -49,15 +48,13 @@ void TestTexture2D::OnUpdate(float deltaTime, GLFWwindow *window, double xpos, d
 
 void TestTexture2D::OnRender()
 {
-    double current = glfwGetTime();
     GLErrCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
     GLErrCall(glClear(GL_COLOR_BUFFER_BIT));
     renderer renderer;
     m_texture->Bind();
     glfwGetFramebufferSize(glfwGetCurrentContext(), &w, &h);
-    glm::mat4 m_proj(1.0f);
+
     m_proj = glm::ortho(0.0f, (float)w, 0.0f, (float)h, -1.0f, 1.0f);
-    glm::mat4 m_view(1.0f);
 
     m_trans = glm::translate(glm::mat4(1.f), glm::vec3(500.5f, 500.5f, 0.0f));
     m_trans = glm::rotate(m_trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
