@@ -60,7 +60,12 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp",
-        "bit": "cpp"
+        "bit": "cpp",
+        "csignal": "cpp",
+        "strstream": "cpp",
+        "condition_variable": "cpp",
+        "mutex": "cpp",
+        "ios": "cpp"
     },
     "cmake.configureOnOpen": false
 }
