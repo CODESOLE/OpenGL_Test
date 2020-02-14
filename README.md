@@ -2,7 +2,7 @@
 My OpenGL learning repo!
 Showcase Video => https://youtu.be/hgZkJ1DKMDc
 
-## Build Instructions
+## Build Instructions for Ubuntu and its variants
 
 First install Visual Studio Code :<br />
 `snap install code`<br />
