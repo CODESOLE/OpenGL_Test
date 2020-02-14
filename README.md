@@ -12,6 +12,6 @@ Secondly install necessary libs, copy-paste terminal this :<br />
 
 Pay attention to libevent-pthreads-`<VERSION>` this version can be change, install according to up to date version
     
-Finally download this repo extract it and open that folder with vs code press F5 to run it, by the way don't forget to install Microsoft's C/C++ extension.
+Finally download this repo extract it and open that folder with vs code press F5 to run it, by the way don't forget to install Microsoft's C/C++ extension before run that. Otherwise it gives you a error that says "Configured debug type 'cppdbg' is not supported".
 
 Currently just runs on Linux.
