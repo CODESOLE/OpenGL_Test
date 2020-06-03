@@ -3,3 +3,5 @@
 
 #ignore .ini files
 /src/imgui.ini
+
+.ccls
