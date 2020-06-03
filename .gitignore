@@ -2,6 +2,6 @@
 /bin/main.exec
 
 #ignore .ini files
-/src/imgui.ini
+imgui.ini
 
 .ccls
