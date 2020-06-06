@@ -44,6 +44,8 @@ TestTexture2D::~TestTexture2D()
 
 void TestTexture2D::OnUpdate(float deltaTime, GLFWwindow *window, double xpos, double ypos, double xoffset, double yoffset)
 {
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
 void TestTexture2D::OnRender()

@@ -14,6 +14,8 @@ TestClearColor::~TestClearColor()
 
 void TestClearColor::OnUpdate(float deltaTime, GLFWwindow *window, double xpos, double ypos, double xoffset, double yoffset)
 {
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
 void TestClearColor::OnRender()
